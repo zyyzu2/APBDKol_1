@@ -1,4 +1,6 @@
 using APBD_Kol1.Context;
+using APBD_Kol1.Repositories;
+using APBD_Kol1.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+
 
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
