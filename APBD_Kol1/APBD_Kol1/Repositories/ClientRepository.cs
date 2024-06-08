@@ -32,11 +32,12 @@ public class ClientRepository : IClientRepository
         if (client is null) throw new NotFoundException("Client not found");
         var subs = await _context.Sales.Where(s => s.IdClient == client.IdClient).ToListAsync();
         double sumprice = 0;
+        ICollection<SubscriptionDetDTO> subsDto = new List<SubscriptionDetDTO>();
         foreach (var sub in subs)
         {
             sumprice += sub.SubscriptionNavigation.Price;
+            
         }
-
         var result = new ClientDetWithSubDTO()
         {
             FirstName = client.FirstName,
