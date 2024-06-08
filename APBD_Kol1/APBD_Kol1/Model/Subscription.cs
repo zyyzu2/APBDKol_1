@@ -9,7 +9,7 @@ public class Subscription
     public string Name { get; set; }
     public int RenewalPeriod { get; set; }
     public DateTime EndTime { get; set; }
-    public SqlMoney Price { get; set; }
+    public double Price { get; set; }
     
     public virtual ICollection<Payment> PaymentsNavigation { get; set; }
     public virtual ICollection<Sale> SalesNavigation { get; set; }
