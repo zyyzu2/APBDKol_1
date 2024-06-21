@@ -23,15 +23,6 @@ public class ClientService : IClientService
     
     public async Task<ClientDetWithSubDTO> getClientDetails(int id)
     {
-        var client = await _repository.GetClientById(id);
-        if (client is null) throw new NotFoundException("Provided client id doesn't exists");
-        //var sub = await _sub.get
-        var dto = new ClientDetWithSubDTO()
-        {
-            Email = client.Email,
-            FirstName = client.FirstName,
-            LastName = client.LastName
-        };
-        return dto;
+        return await _repository.GetClientWithSubsAsync(id);
     }
 }

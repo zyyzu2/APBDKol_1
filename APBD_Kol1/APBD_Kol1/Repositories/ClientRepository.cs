@@ -9,6 +9,7 @@ public interface IClientRepository
 {
     public Task<Client?> GetClientById(int id);
     public Task<ClientDetWithSubDTO> getClientById(int id);
+    public Task<ClientDetWithSubDTO> GetClientWithSubsAsync(int clientId);
 }
 
 public class ClientRepository : IClientRepository
@@ -46,5 +47,32 @@ public class ClientRepository : IClientRepository
         };
         if (client.Phone is not null) result.Phone = client.Phone;
         return result;
+    }
+
+    public async Task<ClientDetWithSubDTO> GetClientWithSubsAsync(int clientId)
+    {
+        var client = await _context.Clients
+            .Include(c => c.SalesNavigation).ThenInclude(s => s.SubscriptionNavigation)
+            .Include(c => c.PaymentsNavigation)
+            .Where(c => c.IdClient == clientId)
+            .Select(c => new ClientDetWithSubDTO()
+            {
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                Email = c.Email,
+                Phone = c.Phone,
+                subs = c.SalesNavigation.Select(s => new SubscriptionDetDTO()
+                {
+                    IdSubscription = s.IdSubscription,
+                    Name = s.SubscriptionNavigation.Name,
+                    TotalPaidAmount = c.PaymentsNavigation.Where(p => p.IdSubscription == s.IdSubscription)
+                        .Sum(p => p.SubscriptionNavigation.Price)
+                }).ToList()
+            }).FirstOrDefaultAsync();
+        if (client == null)
+        {
+            throw new NotFoundException("Client not found");
+        }
+        return client;
     }
 }

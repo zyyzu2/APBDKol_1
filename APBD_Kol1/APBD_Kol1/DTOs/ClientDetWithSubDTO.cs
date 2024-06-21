@@ -6,5 +6,5 @@ public class ClientDetWithSubDTO
     public string LastName { get; set; }
     public string Email { get; set; }
     public string? Phone { get; set; }
-    public ICollection<SubscriptionDetDTO> subs { get; set; }
+    public IEnumerable<SubscriptionDetDTO> subs { get; set; }
 }
